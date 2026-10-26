@@ -1,5 +1,6 @@
 import unittest
 import pytest
+import numpy.testing as npt
 
 import pkmodel as pk
 
@@ -7,15 +8,13 @@ import pkmodel as pk
     scope="session",
     params=[
         {
-            "name": "model1",
-            "Q_p": 1,
+            "Q_p": [1],
             "V_c": 1,
-            "V_p": 1,
+            "V_p": [1],
             "CL": 1,
             "k_a": None,
         },
         {
-            "name": "model2",
             "Q_p": [5, 10],
             "V_c": 2,
             "V_p": [1, 3],
@@ -30,12 +29,11 @@ def A1(request):
 @pytest.fixture(scope="session")
 def m1(A1):
     return pk.Model(
-        A1["name"],
-        A1["Q_p"],
-        A1["V_c"],
-        A1["V_p"],
-        A1["CL"],
-        A1["k_a"],
+        Q_p=A1["Q_p"],
+        V_c=A1["V_c"],
+        V_p=A1["V_p"],
+        CL=A1["CL"],
+        k_a=A1["k_a"],
     )
 
 class TestModel():
@@ -46,10 +44,9 @@ class TestModel():
         """
         Tests Model creation.
         """
-        assert m1.name == A1["name"]
-        assert m1.Q_p1 == A1["Q_p"]
+        npt.assert_array_equal(m1.Q_p, A1["Q_p"])
         assert m1.V_c == A1["V_c"]
-        assert m1.V_p1 == A1["V_p"]
+        npt.assert_array_equal(m1.V_p, A1["V_p"])
         assert m1.CL == A1["CL"]
         assert m1.k_a == A1["k_a"]
         assert "central" in m1.compartment_names
