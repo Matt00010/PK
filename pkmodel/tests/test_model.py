@@ -3,28 +3,40 @@ import pytest
 
 import pkmodel as pk
 
-@pytest.fixture(scope="session")
-def A1():
-    return {
-        "name": "model1",
-        "Q_p": 1,
-        "V_c": 1,
-        "V_p": 1,
-        "CL": 1,
-        "k_a": 1
-    }
+@pytest.fixture(
+    scope="session",
+    params=[
+        {
+            "name": "model1",
+            "Q_p": 1,
+            "V_c": 1,
+            "V_p": 1,
+            "CL": 1,
+            "k_a": None,
+        },
+        {
+            "name": "model2",
+            "Q_p": [5, 10],
+            "V_c": 2,
+            "V_p": [1, 3],
+            "CL": 1,
+            "k_a": 5,
+        },
+    ],
+)
+def A1(request):
+    return request.param
 
 @pytest.fixture(scope="session")
 def m1(A1):
-    params = A1()
     return pk.Model(
-        params["name"],
-        params["Q_p"],
-        params["V_c"],
-        params["V_p"],
-        params["CL"],
-        params["k_a"]
-        )
+        A1["name"],
+        A1["Q_p"],
+        A1["V_c"],
+        A1["V_p"],
+        A1["CL"],
+        A1["k_a"],
+    )
 
 class TestModel():
     """
