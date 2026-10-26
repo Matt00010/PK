@@ -41,6 +41,31 @@ class TestModel():
         assert m1.V_p1 == p["V_p"]
         assert m1.CL == p["CL"]
         assert m1.k_a == p["k_a"]
-        assert m1.n_components == len(p["Q_p"])
+        assert "central" in m1.compartment_names
         assert m1.dose_compartment_index == 0
+
+    def test_compartment_names(self, A1, m1):
+        """
+        Test compartment names
+        """
+        p = A1()
+        if p["k_a"] is None:
+            assert m1.compartment_names[0] == "central"
+            assert "absorption" not in m1.compartment_names
+            assert m1.n_compartments == len(p["Q_p"]) + 1
+        else:
+            assert m1.compartment_names[0] == "absorption"
+            assert m1.compartment_names[1] == "central"
+            assert m1.n_compartments == len(p["Q_p"]) + 2
+
+    def test_rhs_not_implemented_yet(self, A1, m1):
+        """
+        Test that calling rhs on the model yields a NotImplementedError
+        if the peripheral compartments were not provided
+        """
+        p = A1()
+        if p["Q_p"] is None:
+            with pytest.raises(NotImplementedError):
+                assert m1.rhs(0.0, [0.0])
+
 
