@@ -15,7 +15,7 @@ drugs documentation
    :maxdepth: 2
    :caption: Contents:
 
-   readme
+   README <readme>
    reference
    license
 
