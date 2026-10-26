@@ -21,3 +21,8 @@ dev = [
     "pytest-cov",
     "ruff",
 ]
+
+docs = [
+    "sphinx",
+    "myst-parser",
+]
