@@ -25,5 +25,6 @@ dev = [
 ]
 
 docs = [
-    "sphinx"
+    "sphinx",
+    "myst-parser",
 ]
