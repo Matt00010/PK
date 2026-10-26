@@ -1,2 +1,2 @@
-# 2020-software-engineering-projects-pk
+# 2026 Software Engneering
 starter pk modelling repository
