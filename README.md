@@ -2,17 +2,17 @@
 PKModel_marks is a python package for solving and visualising pharmokinetic models. 
 
 ## Package structure
-```python
+```text
 PK/
 ├── pkmodel/
 │   ├── model.py
 │   ├── protocol.py
 │   ├── solution.py
 │   ├── version_info.py
-│   ├── tests/
-│   │   ├── test_model.py
-│   │   ├── test_protocol.py
-│   │   └── test_solution.py
+│   └── tests/
+│       ├── test_model.py
+│       ├── test_protocol.py
+│       └── test_solution.py
 ├── README.md
 ├── pyproject.toml
 ├── app.py
