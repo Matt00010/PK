@@ -28,3 +28,7 @@ docs = [
     "sphinx",
     "myst-parser",
 ]
+
+app = [
+    "streamlit",
+]
