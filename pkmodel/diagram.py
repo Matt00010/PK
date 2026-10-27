@@ -54,7 +54,7 @@ def plot_model_diagram(
         _, ax = plt.subplots(figsize=(width, height))
 
     central_x = 0.0
-    peripheral_x = 4.7
+    peripheral_x = 5.5
     absorption_x = -4.1
     central_width = 2.65
     peripheral_width = 2.85
@@ -90,7 +90,11 @@ def plot_model_diagram(
         if label is not None:
             if label_pos is None:
                 label_pos = ((start[0] + end[0]) / 2, (start[1] + end[1]) / 2 + 0.25)
-            ax.text(*label_pos, label, ha="center", va="center", fontsize=11)
+            ax.text(
+                *label_pos, label, ha="center", va="center", fontsize=11,
+                zorder=5,
+                bbox={"facecolor": "white", "edgecolor": "none", "pad": 0.1},
+            )
 
     draw_box(central_x, 0.0, central_width, "Central compartment", rf"$V_c={model.V_c:g}\,\mathrm{{mL}},\ q_c$")
 
@@ -106,13 +110,21 @@ def plot_model_diagram(
         )
         # Use a different location on the central box edge for each link.
         attachment_y = max(-0.42, min(0.42, y * 0.22))
-        arrow_mid_y = (attachment_y + y) / 2
+        # Spread exchange labels vertically by their destination compartment.
+        # This avoids clustering labels around the central compartment.
+        # Keep the text on the outer side of each diagonal arrow.
+        if y > 0:
+            exchange_label_y = y
+        elif y < 0:
+            exchange_label_y = y
+        else:
+            exchange_label_y = 0.2
         draw_arrow(
             (central_x + central_width / 2 + 0.05, attachment_y),
             (peripheral_x - peripheral_width / 2 - 0.07, y),
             both=True,
             label=rf"$Q_{{p{i}}}={exchange:g}\,\mathrm{{mL/h}}$",
-            label_pos=(2.35, arrow_mid_y + 0.27),
+            label_pos=(2.85, exchange_label_y),
         )
 
     # SC doses enter absorption; IV doses enter the central compartment.
@@ -123,18 +135,19 @@ def plot_model_diagram(
             (absorption_x + absorption_width / 2 + 0.05, 0.0),
             (central_x - central_width / 2 - 0.05, 0.0),
             label=rf"$k_a={model.k_a:g}\,\mathrm{{h^{{-1}}}}$",
-            label_pos=(-2.05, 0.35),
+            label_pos=(-2.05, 0.2),
         )
 
     draw_arrow((dose_x, 1.67), (dose_x, box_height / 2 + 0.06))
     ax.text(dose_x, 1.89, "Dose", ha="center", va="center", fontsize=12)
 
     draw_arrow((central_x, -box_height / 2 - 0.06), (central_x, -1.65))
-    ax.text(0.42, -1.13, rf"$CL={model.CL:g}\,\mathrm{{mL/h}}$", ha="left", va="center", fontsize=11)
+    # Place CL immediately beside the vertical clearance arrow.
+    ax.text(0.16, -1.16, rf"$CL={model.CL:g}\,\mathrm{{mL/h}}$", ha="left", va="center", fontsize=11)
     ax.text(central_x, -1.91, "Clearance", ha="center", va="center", fontsize=11)
 
     left_edge = -5.8 if is_sc else -2.75
-    right_edge = 6.45 if n_peripheral else 2.75
+    right_edge = 7.25 if n_peripheral else 2.75
     top_edge = max(2.55, max(peripheral_ys, default=0.0) + 1.05)
     bottom_of_boxes = min(-2.35, min(peripheral_ys, default=0.0) - 0.65)
 
