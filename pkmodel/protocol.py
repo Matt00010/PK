@@ -1,22 +1,25 @@
+
 """Dosing schedules independent of the PK model."""
 
 from collections.abc import Sequence
+from math import isfinite
 
 
 class Protocol:
-    """Store a schedule of bolus doses and continuous infusions.
+    """Store exact bolus events and constant-rate infusions.
 
     Parameters
     ----------
     boluses : sequence of (time, amount), optional
-        Instantaneous doses: time in h, amount in ng.
+        Instantaneous doses: time in hours, amount in ng.
     infusions : sequence of (start, end, rate), optional
-        Constant infusions: start/end in h, rate in ng/h.
+        Continuous inputs: start/end in hours, rate in ng/h.
 
     Notes
     -----
-    The Model chooses which compartment receives the dose. This class
-    does not depend on Model or Solution. Time is measured in hours.
+    Infusions are active on the interval [start, end).
+    Boluses are instantaneous events, not continuous rates.
+    The Model determines which compartment receives the dose.
     """
 
     def __init__(
@@ -27,9 +30,14 @@ class Protocol:
         self.boluses = tuple(boluses) if boluses is not None else ()
         self.infusions = tuple(infusions) if infusions is not None else ()
 
-    def dose_rate(self, t: float) -> float:
-        """Return continuous dose rate at time t in ng/h.
+        # Validate boluses
+        for time, amount in self.boluses:
+            if not isfinite(time) or time < 0:
+                raise ValueError("Bolus times must be finite and non-negative")
+            if not isfinite(amount) or amount < 0:
+                raise ValueError("Bolus amounts must be finite and non-negative")
 
+<<<<<<< HEAD
         Implement in the Protocol development task. The bolus events
         are handled separately by Solution, not as part of dose_rate.
         Infusion intervals use start <= t < end.
@@ -56,3 +64,38 @@ class Protocol:
     #     else:
     #         return X * ((self.eval_subdiv - 1) * t % (self.dose_on
     #                     + self.dose_off) < self.dose_on)
+=======
+        # Validate infusions
+        for start, end, rate in self.infusions:
+            if not all(isfinite(x) for x in (start, end, rate)):
+                raise ValueError("Infusion values must be finite")
+            if start < 0 or end <= start:
+                raise ValueError("Infusions require 0 <= start < end")
+            if rate < 0:
+                raise ValueError("Infusion rates must be non-negative")
+
+    def dose_rate(self, t: float) -> float:
+        """Return total continuous infusion rate at time t (ng/h)."""
+        return sum(
+            rate
+            for start, end, rate in self.infusions
+            if start <= t < end
+        )
+
+    def bolus_amount(self, t: float) -> float:
+        """Return total bolus amount scheduled exactly at t (ng)."""
+        return sum(
+            amount
+            for time, amount in self.boluses
+            if time == t
+        )
+
+    def event_times(self) -> tuple[float, ...]:
+        """Return sorted unique times at which dosing changes."""
+        times = {time for time, _ in self.boluses}
+
+        for start, end, _ in self.infusions:
+            times.update((start, end))
+
+        return tuple(sorted(times))
+>>>>>>> ed89077ed5ce2a7251f07859621397ffe8c5ee78
