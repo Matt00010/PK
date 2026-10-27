@@ -26,7 +26,8 @@ dev = [
 ]
 
 docs = [
-    "sphinx",
+    "sphinx>=1.5, !=1.7.3",
+    "sphinx-rtd-theme",
     "myst-parser",
 ]
 
