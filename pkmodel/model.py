@@ -61,12 +61,29 @@ class Model:
         """State index receiving doses: IV central or SC absorption."""
         return 0
 
-    def rhs(
-        self, t: float, y: Sequence[float], input_rate: float = 0.0
-    ) -> list[float]:
+    def rhs(self, t: float, y: Sequence[float], input_rate: float = 0.0) -> list[float]:
         """Return dq/dt (ng/h) given time, quantities (ng), and dose rate.
 
         Implement this in the Model development task. This method must
         not read a Protocol object; the Solution will supply input_rate.
         """
-        raise NotImplementedError("Model.rhs is a Phase 2 task")
+        if self.k_a is None: #AKA Intravenous dosing
+            q_c, q_p1 = y
+            transition = self.Q_p[0] * (q_c / self.V_c - q_p1 / self.V_p[0])
+
+            dqc_dt = input_rate - q_c / self.V_c * self.CL - transition
+            dqp1_dt = transition
+
+            return [dqc_dt, dqp1_dt]
+        else: #AKA Subcutaneous dosing
+            q_0, q_c, q_p1 = y
+
+            absorption = self.k_a * q_0
+            transition = self.Q_p[0] * (q_c / self.V_c - q_p1 / self.V_p[0])
+
+            dq0_dt = input_rate - absorption
+            dqc_dt = absorption - q_c / self.V_c * self.CL - transition
+            dqp1_dt = transition
+
+            return [dq0_dt, dqc_dt, dqp1_dt]
+
