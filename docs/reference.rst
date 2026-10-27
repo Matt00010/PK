@@ -9,3 +9,6 @@ API reference
 
 .. automodule:: pkmodel.solution
    :members:
+
+.. automodule:: pkmodel.diagram
+   :members:
