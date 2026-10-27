@@ -37,6 +37,7 @@ class Protocol:
             if not isfinite(amount) or amount < 0:
                 raise ValueError("Bolus amounts must be finite and non-negative")
 
+
         # Validate infusions
         for start, end, rate in self.infusions:
             if not all(isfinite(x) for x in (start, end, rate)):

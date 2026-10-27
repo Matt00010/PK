@@ -27,6 +27,7 @@ class Solution:
     t : numpy.ndarray or None
         Solution times in hours. With ``t_eval=None``, bolus events may
         appear twice to show the instantaneous change in quantity.
+        (E.g. a bolus of 5 at time 2 would result in (t=2, q=...) and (t=2, q=...+5) both being recorded.)
     y : numpy.ndarray or None
         Compartment quantities in ng, shape (n_compartments, n_times).
 
