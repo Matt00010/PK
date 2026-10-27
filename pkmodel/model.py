@@ -1,31 +1,32 @@
 """Definition of a compartmental pharmacokinetic model."""
 
 from collections.abc import Sequence
+from math import isfinite
 
 
 class Model:
-    """Store PK parameters and define the future ODE interface.
+    """Linear compartmental pharmacokinetic model.
 
     Parameters
     ----------
     V_c : float
-        Central compartment volume in mL.
+        Central compartment volume in mL (strictly positive).
     CL : float
-        Clearance from the central compartment in mL/h.
+        Clearance from the central compartment in mL/h (non-negative).
     V_p : sequence of float, optional
-        Peripheral compartment volumes in mL.
+        Peripheral compartment volumes in mL (strictly positive).
     Q_p : sequence of float, optional
-        Exchange clearances for peripheral compartments in mL/h.
+        Exchange clearances in mL/h (non-negative), one per peripheral.
     k_a : float, optional
-        First-order absorption rate in 1/h. If provided, the model has
-        a subcutaneous absorption compartment; otherwise it is IV.
+        First-order absorption rate in 1/h (strictly positive). If provided,
+        a subcutaneous absorption compartment precedes the central compartment.
 
     Notes
     -----
-    State ordering is [central, peripheral_1, ...] for IV models and
-    [absorption, central, peripheral_1, ...] for SC models. Doses enter
-    the central compartment for IV, or the absorption compartment for SC.
-    The right-hand side method is intentionally unimplemented in Phase 1.
+    IV state ordering: [central, peripheral_1, peripheral_2, ...].
+    SC state ordering: [absorption, central, peripheral_1, ...].
+    Drug is administered into the compartment at dose_compartment_index.
+    Quantities are in ng; rates returned by rhs are in ng/h.
     """
 
     def __init__(
@@ -42,9 +43,22 @@ class Model:
         self.Q_p = tuple(Q_p) if Q_p is not None else ()
         self.k_a = k_a
 
+        if not isfinite(self.V_c) or self.V_c <= 0:
+            raise ValueError("V_c must be positive and finite")
+        if not isfinite(self.CL) or self.CL < 0:
+            raise ValueError("CL must be non-negative and finite")
+        if len(self.V_p) != len(self.Q_p):
+            raise ValueError("V_p and Q_p must have the same length")
+        if any(not isfinite(volume) or volume <= 0 for volume in self.V_p):
+            raise ValueError("Peripheral volumes must be positive and finite")
+        if any(not isfinite(clearance) or clearance < 0 for clearance in self.Q_p):
+            raise ValueError("Exchange clearances must be non-negative and finite")
+        if self.k_a is not None and (not isfinite(self.k_a) or self.k_a <= 0):
+            raise ValueError("k_a must be positive and finite")
+
     @property
     def compartment_names(self) -> tuple[str, ...]:
-        """Names in the same order as ODE state vector entries."""
+        """Compartment names in the same order as the ODE state vector."""
         names = ["central"]
         names.extend(f"peripheral_{i}" for i in range(1, len(self.V_p) + 1))
         if self.k_a is not None:
@@ -58,32 +72,52 @@ class Model:
 
     @property
     def dose_compartment_index(self) -> int:
-        """State index receiving doses: IV central or SC absorption."""
+        """Index of the compartment receiving IV or SC doses."""
         return 0
 
     def rhs(self, t: float, y: Sequence[float], input_rate: float = 0.0) -> list[float]:
-        """Return dq/dt (ng/h) given time, quantities (ng), and dose rate.
+        """Return rates of change of all compartment quantities (ng/h).
 
-        Implement this in the Model development task. This method must
-        not read a Protocol object; the Solution will supply input_rate.
+        Parameters
+        ----------
+        t : float
+            Current time in h (accepted for the solve_ivp interface).
+        y : sequence of float
+            Drug quantities (ng), ordered according to compartment_names.
+        input_rate : float, optional
+            Continuous drug input in ng/h, supplied by Solution from Protocol.
+
+        Returns
+        -------
+        list of float
+            Time derivatives in ng/h, with the same ordering as ``y``.
         """
-        if self.k_a is None: #AKA Intravenous dosing
-            q_c, q_p1 = y
-            transition = self.Q_p[0] * (q_c / self.V_c - q_p1 / self.V_p[0])
+        if len(y) != self.n_compartments:
+            raise ValueError(
+                f"Expected {self.n_compartments} quantities, received {len(y)}"
+            )
 
-            dqc_dt = input_rate - q_c / self.V_c * self.CL - transition
-            dqp1_dt = transition
+        # For SC dosing, the initial state is an absorption compartment.
+        if self.k_a is None:
+            q_c = y[0]
+            q_p = y[1:]
+            absorption_rate = 0.0
+        else:
+            q_abs = y[0]
+            q_c = y[1]
+            q_p = y[2:]
+            absorption_rate = self.k_a * q_abs
 
-            return [dqc_dt, dqp1_dt]
-        else: #AKA Subcutaneous dosing
-            q_0, q_c, q_p1 = y
+        central_concentration = q_c / self.V_c
+        dqc_dt = absorption_rate - self.CL * central_concentration
+        peripheral_rates = []
 
-            absorption = self.k_a * q_0
-            transition = self.Q_p[0] * (q_c / self.V_c - q_p1 / self.V_p[0])
+        for amount, volume, exchange in zip(q_p, self.V_p, self.Q_p):
+            transfer = exchange * (central_concentration - amount / volume)
+            dqc_dt -= transfer
+            peripheral_rates.append(transfer)
 
-            dq0_dt = input_rate - absorption
-            dqc_dt = absorption - q_c / self.V_c * self.CL - transition
-            dqp1_dt = transition
+        if self.k_a is None:
+            return [dqc_dt + input_rate, *peripheral_rates]
 
-            return [dq0_dt, dqc_dt, dqp1_dt]
-
+        return [input_rate - absorption_rate, dqc_dt, *peripheral_rates]
