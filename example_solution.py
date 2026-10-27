@@ -9,24 +9,29 @@ model = pk.Model(
     Q_p = [1_000]
 )
 
-protocol = pk.Protocol(
-    boluses = [
+boluses = [
         (0, 100_000),   # 100,000 ng at 0hr
         (12, 50_000)    # 50,000 ng at 12hr
-    ],
-    infusions = [
-        (2, 4, 10_000) # 10,000 ng/hr from 2h to 4h (i.e. over the period [2,4))
     ]
+
+infusions = [
+        (5, 50, 10_000) # 10,000 ng/hr from 5h to 25h
+    ]
+
+protocol = pk.Protocol(
+    boluses = boluses,
+    infusions = infusions
 )
 
 solution = pk.Solution(model, protocol).solve(
-    t_span=(0, 24),
-    t_eval=np.linspace(0,24,1000)
+    t_span=(0, 100),
+    t_eval=np.linspace(0,100,1000)
 )
 
-print(solution.t)
-print(solution.y[0])
-solution.plot("central")
-solution.plot("peripheral_1")
+fig, ax = plt.subplots()
 
+for name in solution.model.compartment_names:
+    solution.plot(protocol, name, ax=ax)
+
+plt.legend()
 plt.show()
