@@ -37,34 +37,7 @@ class Protocol:
             if not isfinite(amount) or amount < 0:
                 raise ValueError("Bolus amounts must be finite and non-negative")
 
-<<<<<<< HEAD
-        Implement in the Protocol development task. The bolus events
-        are handled separately by Solution, not as part of dose_rate.
-        Infusion intervals use start <= t < end.
-        """
-        total_rate = 0.0
 
-        for start, end, rate in self.infusions: #no boluses as only infusions as given continuously
-            if start <= t < end:
-                total_rate += rate
-        return total_rate
-    
-    # def dose(self, t, X):
-    #     """Dose function to be evaluated at all times t in [0,1] when solving ODEs
-
-    #     Args:
-    #         t (float): time value, between 0 and 1
-    #         X (float): magnitude of dosage applied at all relevant times
-
-    #     Returns:
-    #         float: amount of drug administered at time t
-    #     """
-    #     if self.dose_on == 0:
-    #         return X * (t == 0)
-    #     else:
-    #         return X * ((self.eval_subdiv - 1) * t % (self.dose_on
-    #                     + self.dose_off) < self.dose_on)
-=======
         # Validate infusions
         for start, end, rate in self.infusions:
             if not all(isfinite(x) for x in (start, end, rate)):
@@ -98,4 +71,3 @@ class Protocol:
             times.update((start, end))
 
         return tuple(sorted(times))
->>>>>>> ed89077ed5ce2a7251f07859621397ffe8c5ee78
