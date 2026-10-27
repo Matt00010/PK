@@ -36,7 +36,7 @@ def m1(A1):
         k_a=A1["k_a"],
     )
 
-class TestModel():
+class TestModel:
     """
     Tests the :class:`Model` class.
     """
