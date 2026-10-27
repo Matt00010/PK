@@ -34,4 +34,9 @@ class Protocol:
         are handled separately by Solution, not as part of dose_rate.
         Infusion intervals use start <= t < end.
         """
-        raise NotImplementedError("Protocol.dose_rate is a Phase 2 task")
+        total_rate = 0.0
+
+        for start, end, rate in self.infusions: #no boluses as only infusions as given continuously
+            if start <= t < end:
+                total_rate += rate
+        return total_rate
