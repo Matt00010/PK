@@ -162,7 +162,7 @@ class Solution:
 
         return self
 
-    def plot(self, compartment: str = "central", ax: "Axes | None" = None) -> "Axes":
+    def plot(self, protocol, compartment: str = "central", ax: "Axes | None" = None) -> "Axes":
         """Plot drug quantity in the selected compartment (ng vs h).
 
         Parameters
@@ -193,7 +193,18 @@ class Solution:
 
             _, ax = plt.subplots()
 
+        # Label bolus and infusions
+
+
         ax.plot(self.t, self.y[index], label=compartment)
+
+        # Label bolus events
+        for i in range(len(protocol.boluses)):
+            ax.axvline(protocol.boluses[i][0], c='k', ls='--', alpha=.7, label=f'Bolus ({protocol.boluses[i][1]:,} ng)')
+
+        # Show infusions
+        for i in range(len(protocol.infusions)):
+            ax.axvspan(protocol.infusions[i][0], protocol.infusions[i][1], alpha=0.5, color='lightgrey', label=f'Infusion ({protocol.infusions[i][2]:,} ng/hr)')
         ax.set_xlabel("Time (h)")
         ax.set_ylabel("Drug quantity (ng)")
         ax.legend()
