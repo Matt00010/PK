@@ -97,12 +97,12 @@ class TestProtocol:
     def test_invalid_boluses(self, invalid_params):
         for bolus in invalid_params["boluses"]:
             with pytest.raises(ValueError):
-                pk.Protocol(boluses=[bolus], infusions=[(0, 1, 1)])
+                pk.Protocol(boluses=[bolus])
 
     def test_invalid_infusions(self, invalid_params):
         for infusion in invalid_params["infusions"]:
             with pytest.raises(ValueError):
-                pk.Protocol(boluses=[(0, 1)], infusions=[infusion])
+                pk.Protocol(infusions=[infusion])
 
     def test_dose_rate(self, A1, p1):
         """
