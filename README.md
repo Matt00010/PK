@@ -1,4 +1,4 @@
-# Pharmokinetic Modelling Package (PKModel_marks)
+# PKModel_marks: Pharmokinetic Modelling Package 
 PKModel_marks is a python package for solving and visualising pharmokinetic models.
 
 The library supports both intravenous (IV) and subcutaneous (SC)
@@ -6,9 +6,11 @@ dosing, with optional peripheral compartments.
 
 Both models support instantaneous bolus doses and constant-rate
 infusions. Subcutaneous dosing introduces an additional absorption
-compartment governed by the absorption rate constant k_a.
+compartment governed by the absorption rate constant `k_a` (Figure 1).
 
 ![Intravenous and Subcutaneous PK Models](docs/images/pk_model_diagrams.png)
+
+*Figure 1: Schematic of the compartments associated with intravenous (IV) and subcutaneous (SC) drug administration.*
 
 ## Package structure
 ```text
@@ -30,9 +32,9 @@ PK/
 
 | Script | Description |
 |-------|-------------|
-| `Model` | Defines the model parameters and calculates how drug quantity changes over time across each compartment. |
+| `Model` | Defines the model parameters and calculates how the drug quantity changes over time across each compartment. |
 | `Protocol` | Defines whether the drug administration is continuous or instantaneous bolus. |
-| `Solution` | 	Solves the PK model with SciPy and visualises the changes in drug quantity over time |
+| `Solution` | 	Solves the PK model with SciPy and visualises the changes in drug quantity over time. |
 
 ## Installing PKM
 
@@ -50,6 +52,7 @@ import matplotlib.pyplot as plt
 ## Example
 
 **1. Define the model**
+
 For intravenous administration:
 ```python
 model = pk.Model(
@@ -60,7 +63,7 @@ model = pk.Model(
 )
 ```
 
-For subcutaneous administration, specify the k_a parameter.
+For subcutaneous administration, use the same model structure as above but specify a k_a parameter.
 
 **2. Define the dosing protocol**
 
