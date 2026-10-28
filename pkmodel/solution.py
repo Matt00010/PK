@@ -41,6 +41,7 @@ class Solution:
     solver is restarted at each infusion boundary and bolus event.
     """
 
+<<<<<<< HEAD
     def __init__(self, model: "Model", protocol: "Protocol") -> None:
         self.model = model
         self.protocol = protocol
@@ -209,3 +210,7 @@ class Solution:
         ax.set_ylabel("Drug quantity (ng)")
         # ax.legend()
         return ax
+=======
+    
+
+>>>>>>> 643de4b2f103f7f27d8725143dc58f6f3412c1be

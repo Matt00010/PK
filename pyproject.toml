@@ -4,7 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pkmodel-marks"
+<<<<<<< HEAD
 authors = [{name ="Matthew Peters"}, {name="Adam Michaels"},{name="Reefe Conley"},{name="Katie Barton"},{name="Saja Isabella Ilott"}]
+=======
+authors = [{name="Matthew Peters"},{name="Adam Michaels"},{name="Reefe Conley"},{name="Katie Barton"},{name="Saja Isabella Ilott}]
+>>>>>>> 643de4b2f103f7f27d8725143dc58f6f3412c1be
 version = "0.1.0"
 description = "Group Python Project for Pharmacokinetics"
 readme = "README.md"
@@ -26,7 +30,11 @@ dev = [
 ]
 
 docs = [
+<<<<<<< HEAD
     "sphinx>=1.5, !=1.7.3",
+=======
+    "sphinx>=1.5,!=1.7.3",
+>>>>>>> 643de4b2f103f7f27d8725143dc58f6f3412c1be
     "sphinx-rtd-theme",
     "myst-parser",
 ]
