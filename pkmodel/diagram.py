@@ -12,6 +12,8 @@ import matplotlib.pyplot as plt
 from matplotlib.axes import Axes
 from matplotlib.patches import FancyArrowPatch, Rectangle
 
+import numpy as np
+
 if TYPE_CHECKING:
     from .model import Model
     from .protocol import Protocol
@@ -50,7 +52,7 @@ def plot_model_diagram(
 
     if ax is None:
         width = 12 if is_sc else (10 if n_peripheral else 8)
-        height = max(5.3, 5.0 + max(0, n_peripheral - 2) * 1.15)
+        height = max(6.5, 5.0 + max(0, n_peripheral - 2) * 1.15)
         _, ax = plt.subplots(figsize=(width, height))
 
     central_x = 0.0
@@ -108,23 +110,48 @@ def plot_model_diagram(
             rf"$V_{{p{i}}}={volume:g}\,\mathrm{{mL}},\ q_{{p{i}}}$",
             dashed=True,
         )
-        # Use a different location on the central box edge for each link.
+        # Attach each arrow at a slightly different height on the central box.
         attachment_y = max(-0.42, min(0.42, y * 0.22))
-        # Spread exchange labels vertically by their destination compartment.
-        # This avoids clustering labels around the central compartment.
-        # Keep the text on the outer side of each diagonal arrow.
-        if y > 0:
-            exchange_label_y = y
-        elif y < 0:
-            exchange_label_y = y
-        else:
-            exchange_label_y = 0.2
-        draw_arrow(
-            (central_x + central_width / 2 + 0.05, attachment_y),
-            (peripheral_x - peripheral_width / 2 - 0.07, y),
-            both=True,
-            label=rf"$Q_{{p{i}}}={exchange:g}\,\mathrm{{mL/h}}$",
-            label_pos=(2.85, exchange_label_y),
+
+        start = (central_x + central_width / 2 + 0.05, attachment_y)
+        end = (peripheral_x - peripheral_width / 2 - 0.07, y)
+
+        # Calculate arrow direction and rotation.
+        dx = end[0] - start[0]
+        dy = end[1] - start[1]
+        angle = np.degrees(np.arctan2(dy, dx))
+
+        # Position label at midpoint, offset perpendicular to the arrow.
+        mid_x = (start[0] + end[0]) / 2
+        mid_y = (start[1] + end[1]) / 2
+
+        length = np.hypot(dx, dy)
+        offset = 0.2
+
+        # Upper arrows: position labels above.
+        # Lower arrows: position labels below.
+        side = 1 if y >= 0 else -1
+
+        label_x = mid_x - side * offset * dy / length
+        label_y = mid_y + side * offset * dx / length
+
+        draw_arrow(start, end, both=True)
+
+        ax.text(
+            label_x,
+            label_y,
+            rf"$Q_{{p{i}}}={exchange:g}\,\mathrm{{mL/h}}$",
+            ha="center",
+            va="center",
+            fontsize=11,
+            rotation=angle,
+            rotation_mode="anchor",
+            zorder=5,
+            bbox={
+                "facecolor": "white",
+                "edgecolor": "none",
+                "pad": 0.15,
+            },
         )
 
     # SC doses enter absorption; IV doses enter the central compartment.
@@ -192,4 +219,12 @@ def plot_model_diagram(
     ax.set_ylim(bottom_edge, top_edge)
     ax.set_aspect("equal", adjustable="box")
     ax.axis("off")
+
+    dosing_type = "Subcutaneous" if is_sc else "Intravenous"
+    ax.set_title(
+        f"{dosing_type} PK Model and Dosing Protocol",
+        fontsize=14,
+        pad=20,
+    )
+
     return ax

@@ -1,6 +1,7 @@
-import numpy as np
-import pkmodel as pk
 import matplotlib.pyplot as plt
+import numpy as np
+
+import pkmodel as pk
 
 model = pk.Model(
     V_c = 10_000,
@@ -15,7 +16,7 @@ boluses = [
     ]
 
 infusions = [
-        (5, 50, 10_000) # 10,000 ng/hr from 5h to 25h
+        (5, 50, 10_000) # 10,000 ng/hr from 5h to 50h
     ]
 
 protocol = pk.Protocol(
@@ -33,6 +34,7 @@ fig, ax = plt.subplots()
 for name in solution.model.compartment_names:
     solution.plot(protocol, name, ax=ax)
 
+# 
 handles, labels = ax.get_legend_handles_labels()
 unique_entries = dict(zip(labels, handles))
 ax.legend(unique_entries.values(), unique_entries.keys())

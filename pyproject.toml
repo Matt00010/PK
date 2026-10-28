@@ -28,7 +28,6 @@ dev = [
     "pytest-cov",
     "ruff",
 ]
-
 docs = [
 <<<<<<< HEAD
     "sphinx>=1.5, !=1.7.3",
@@ -42,3 +41,8 @@ docs = [
 app = [
     "streamlit",
 ]
+
+[tool.setuptools]
+packages = [
+    "pkmodel"
+    ]
