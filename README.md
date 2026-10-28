@@ -82,6 +82,14 @@ solution.plot("peripheral_1")
 plt.show()
 ```
 
+## Interactive Demonstration 
+Install the optional Streamlit dependency and launch the comparison app from
+the repository root:
+```powershell
+pip install -e ".[app]"
+streamlit run app.py
+```
+
 ## Contributors
 Developed as part of the Software Engineering model in the Doctoral Training Centre (DTC).
 * Matt
