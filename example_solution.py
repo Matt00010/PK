@@ -31,11 +31,15 @@ solution = pk.Solution(model, protocol).solve(
 fig, ax = plt.subplots()
 
 for name in solution.model.compartment_names:
-    solution.plot(protocol, name, ax=ax)
+    solution.plot(name, ax=ax)
 
 handles, labels = ax.get_legend_handles_labels()
 unique_entries = dict(zip(labels, handles))
 ax.legend(unique_entries.values(), unique_entries.keys())
 
-# plt.legend()
+ax.set_title("Drug Quantity Over Time - By Compartment", fontsize=14, pad=20)
+
+# Draw the model and protocol (no simulation needed for this diagram)
+diagram_ax = pk.diagram.plot_model_diagram(model, protocol)
+
 plt.show()

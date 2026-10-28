@@ -98,7 +98,7 @@ def plot_model_diagram(
                 bbox={"facecolor": "white", "edgecolor": "none", "pad": 0.1},
             )
 
-    draw_box(central_x, 0.0, central_width, "Central compartment", rf"$V_c={model.V_c:g}\,\mathrm{{mL}},\ q_c$")
+    draw_box(central_x, 0.0, central_width, "Central compartment", rf"$V_c$ = {model.V_c:,} mL, $q_c$")
 
     # Peripherals are stacked vertically, each linked directly to central.
     spacing = 1.7
@@ -107,7 +107,7 @@ def plot_model_diagram(
         draw_box(
             peripheral_x, y, peripheral_width,
             f"Peripheral compartment {i}",
-            rf"$V_{{p{i}}}={volume:g}\,\mathrm{{mL}},\ q_{{p{i}}}$",
+            rf"$V_{{p{i}}}$ = {volume:,} mL, $q_{{p{i}}}$",
             dashed=True,
         )
         # Attach each arrow at a slightly different height on the central box.
@@ -140,7 +140,7 @@ def plot_model_diagram(
         ax.text(
             label_x,
             label_y,
-            rf"$Q_{{p{i}}}={exchange:g}\,\mathrm{{mL/h}}$",
+            rf"$Q_{{p{i}}}$ = {exchange:,} mL/h",
             ha="center",
             va="center",
             fontsize=11,
@@ -161,7 +161,7 @@ def plot_model_diagram(
         draw_arrow(
             (absorption_x + absorption_width / 2 + 0.05, 0.0),
             (central_x - central_width / 2 - 0.05, 0.0),
-            label=rf"$k_a={model.k_a:g}\,\mathrm{{h^{{-1}}}}$",
+            label=rf"$k_a$ = {model.k_a:,} $h^{{-1}}$",
             label_pos=(-2.05, 0.2),
         )
 
@@ -170,7 +170,7 @@ def plot_model_diagram(
 
     draw_arrow((central_x, -box_height / 2 - 0.06), (central_x, -1.65))
     # Place CL immediately beside the vertical clearance arrow.
-    ax.text(0.16, -1.16, rf"$CL={model.CL:g}\,\mathrm{{mL/h}}$", ha="left", va="center", fontsize=11)
+    ax.text(0.16, -1.16, rf"CL = {model.CL:,} mL/h", ha="left", va="center", fontsize=11)
     ax.text(central_x, -1.91, "Clearance", ha="center", va="center", fontsize=11)
 
     left_edge = -5.8 if is_sc else -2.75
@@ -184,14 +184,14 @@ def plot_model_diagram(
         if protocol.boluses:
             parts.append(
                 "Boluses: " + ", ".join(
-                    f"{amount:g} ng at {time:g} h"
+                    f"{amount:,} ng at {time:,} h"
                     for time, amount in protocol.boluses
                 )
             )
         if protocol.infusions:
             parts.append(
                 "Infusions: " + ", ".join(
-                    f"{rate:g} ng/h from {start:g} to {end:g} h"
+                    f"{rate:,} ng/h from {start:,} to {end:,} h"
                     for start, end, rate in protocol.infusions
                 )
             )

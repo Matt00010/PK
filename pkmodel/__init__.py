@@ -11,3 +11,4 @@ from .version_info import VERSION_INT, VERSION  # noqa
 from .model import Model    # noqa
 from .protocol import Protocol    # noqa
 from .solution import Solution     # noqa
+from .diagram import plot_model_diagram     # noqa
