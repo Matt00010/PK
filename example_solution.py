@@ -6,8 +6,8 @@ import pkmodel as pk
 model = pk.Model(
     V_c = 10_000,
     CL = 1_000,
-    V_p = [5_000],
-    Q_p = [1_000]
+    V_p = [5_000, 5_000],
+    Q_p = [1_000, 2_000]
 )
 
 boluses = [
@@ -34,5 +34,14 @@ fig, ax = plt.subplots()
 for name in solution.model.compartment_names:
     solution.plot(protocol, name, ax=ax)
 
+<<<<<<< HEAD
 plt.legend()
 plt.show()
+=======
+handles, labels = ax.get_legend_handles_labels()
+unique_entries = dict(zip(labels, handles))
+ax.legend(unique_entries.values(), unique_entries.keys())
+
+# plt.legend()
+plt.show()
+>>>>>>> fe85117bf6c871db11d350cf96bcf4060f97fad3

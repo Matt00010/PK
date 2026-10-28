@@ -209,5 +209,5 @@ class Solution:
             ax.axvspan(protocol.infusions[i][0], protocol.infusions[i][1], alpha=0.5, color='lightgrey', label=f'Infusion ({protocol.infusions[i][2]:,} ng/hr)')
         ax.set_xlabel("Time (h)")
         ax.set_ylabel("Drug quantity (ng)")
-        ax.legend()
+        # ax.legend()
         return ax
