@@ -14,18 +14,18 @@ def model_parameters(label, peripheral_count, use_absorption, q_defaults):
     """Collect parameters for one model from the comparison form."""
     st.subheader(label)
     central_volume = st.number_input(
-        "{} central volume (mL)".format(label),
+        f"{label} central volume (mL)",
         min_value=0.000001,
         value=1.0,
         step=0.1,
-        key="{}_central_volume".format(label),
+        key=f"{label}_central_volume",
     )
     clearance = st.number_input(
-        "{} clearance (mL/h)".format(label),
+        f"{label} clearance (mL/h)",
         min_value=0.0,
         value=1.0,
         step=0.1,
-        key="{}_clearance".format(label),
+        key=f"{label}_clearance",
     )
 
     peripheral_volumes = []
@@ -33,33 +33,31 @@ def model_parameters(label, peripheral_count, use_absorption, q_defaults):
     for index in range(peripheral_count):
         peripheral_volumes.append(
             st.number_input(
-                "{} peripheral {} volume (mL)".format(label, index + 1),
+                f"{label} peripheral {index + 1} volume (mL)",
                 min_value=0.000001,
                 value=1.0,
                 step=0.1,
-                key="{}_volume_{}".format(label, index),
+                key=f"{label}_volume_{index}",
             )
         )
         exchange_clearances.append(
             st.number_input(
-                "{} peripheral {} exchange clearance (mL/h)".format(
-                    label, index + 1
-                ),
+                f"{label} peripheral {index + 1} exchange clearance (mL/h)",
                 min_value=0.0,
                 value=q_defaults[index],
                 step=0.1,
-                key="{}_exchange_{}".format(label, index),
+                key=f"{label}_exchange_{index}",
             )
         )
 
     absorption_rate = None
     if use_absorption:
         absorption_rate = st.number_input(
-            "{} absorption rate (1/h)".format(label),
+            f"{label} absorption rate (1/h)",
             min_value=0.000001,
             value=1.0,
             step=0.1,
-            key="{}_absorption_rate".format(label),
+            key=f"{label}_absorption_rate",
         )
 
     return {
@@ -152,7 +150,7 @@ if submitted:
         st.error(
             "The package simulation is not implemented yet, so the app "
             "cannot run this comparison. Complete Model.rhs and "
-            "Solution.solve first. Details: {}".format(error)
+            f"Solution.solve first. Details: {error}"
         )
         st.stop()
 
@@ -162,7 +160,7 @@ if submitted:
             axes.plot(
                 solution.t,
                 solution.y[index],
-                label="{} - {}".format(label, compartment),
+                label=f"{label} - {compartment}",
             )
     axes.set_xlabel("Time (h)")
     axes.set_ylabel("Drug amount (ng)")
@@ -177,8 +175,8 @@ if submitted:
     central_a = solution_a.y[central_index_a, -1]
     central_b = solution_b.y[central_index_b, -1]
     metric_columns = st.columns(3)
-    metric_columns[0].metric("Model A central at end", "{:.3f} ng".format(central_a))
-    metric_columns[1].metric("Model B central at end", "{:.3f} ng".format(central_b))
+    metric_columns[0].metric("Model A central at end", f"{central_a:.3f} ng")
+    metric_columns[1].metric("Model B central at end", f"{central_b:.3f} ng")
     metric_columns[2].metric(
-        "Difference (B - A)", "{:+.3f} ng".format(central_b - central_a)
+        "Difference (B - A)", f"{central_b - central_a:+.3f} ng"
     )

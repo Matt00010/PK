@@ -1,6 +1,7 @@
-import numpy as np
-import pkmodel as pk
 import matplotlib.pyplot as plt
+import numpy as np
+
+import pkmodel as pk
 
 model = pk.Model(
     V_c = 10_000,

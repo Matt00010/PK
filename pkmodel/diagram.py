@@ -113,9 +113,7 @@ def plot_model_diagram(
         # Spread exchange labels vertically by their destination compartment.
         # This avoids clustering labels around the central compartment.
         # Keep the text on the outer side of each diagonal arrow.
-        if y > 0:
-            exchange_label_y = y
-        elif y < 0:
+        if y != 0:
             exchange_label_y = y
         else:
             exchange_label_y = 0.2

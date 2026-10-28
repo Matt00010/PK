@@ -1,8 +1,8 @@
-import unittest
-import pytest
 import numpy.testing as npt
+import pytest
 
 import pkmodel as pk
+
 
 @pytest.fixture(
     scope="session",
