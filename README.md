@@ -1,5 +1,5 @@
 # Pharmokinetic Modelling Package (PKModel_marks)
-PKModel_marks is a python package for solving and visualising pharmokinetic models. 
+PKModel_marks is a python package for solving and visualising pharmokinetic models.
 
 ## Package structure
 ```text
@@ -51,7 +51,7 @@ model = pk.Model(
 )
 ```
 
-For subcutaneous administration, specify the k_a parameter. 
+For subcutaneous administration, specify the k_a parameter.
 
 **2. Define the dosing protocol**
 

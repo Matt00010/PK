@@ -1,8 +1,8 @@
-import unittest
-import pytest
 import numpy.testing as npt
+import pytest
 
 import pkmodel as pk
+
 
 @pytest.fixture(
     scope="session",
@@ -73,5 +73,3 @@ class TestModel:
         if A1["Q_p"] is None:
             with pytest.raises(NotImplementedError):
                 assert m1.rhs(0.0, [0.0])
-
-

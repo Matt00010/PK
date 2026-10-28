@@ -1,5 +1,6 @@
 """Numerical simulation and result handling for PK models."""
 
+import itertools
 from collections.abc import Sequence
 from typing import TYPE_CHECKING, Self
 
@@ -8,6 +9,7 @@ from scipy.integrate import solve_ivp
 
 if TYPE_CHECKING:
     from matplotlib.axes import Axes
+
     from .model import Model
     from .protocol import Protocol
 
@@ -109,14 +111,14 @@ class Solution:
                 dtype=float,
             )
 
-        for left, right in zip(boundaries[:-1], boundaries[1:]):
+        for left, right in itertools.pairwise(boundaries[:-1], boundaries[1:]):
             # The rate is constant throughout this open interval. Using
             # its midpoint avoids evaluating a discontinuous input at
             # an endpoint inside solve_ivp's Runge-Kutta stages.
             rate = self.protocol.dose_rate(left + (right - left) / 2)
 
             result = solve_ivp(
-                fun=lambda t, y: self.model.rhs(t, y, input_rate=rate),
+                fun=lambda t, y, rate=rate: self.model.rhs(t, y, input_rate=rate),
                 t_span=(left, right),
                 y0=state,
                 dense_output=observation_times is not None,
