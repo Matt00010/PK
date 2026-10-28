@@ -23,7 +23,6 @@ dev = [
     "pytest-cov",
     "ruff",
 ]
-
 docs = [
     "sphinx",
     "myst-parser",
@@ -32,3 +31,8 @@ docs = [
 app = [
     "streamlit",
 ]
+
+[tool.setuptools]
+packages = [
+    "pkmodel"
+    ]
