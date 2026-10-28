@@ -111,7 +111,7 @@ class Solution:
                 dtype=float,
             )
 
-        for left, right in itertools.pairwise(boundaries[:-1], boundaries[1:]):
+        for left, right in itertools.pairwise(boundaries):
             # The rate is constant throughout this open interval. Using
             # its midpoint avoids evaluating a discontinuous input at
             # an endpoint inside solve_ivp's Runge-Kutta stages.
