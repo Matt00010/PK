@@ -4,11 +4,11 @@ PKModel_marks is a python package for solving and visualising pharmokinetic mode
 The library supports both intravenous (IV) and subcutaneous (SC)
 dosing, with optional peripheral compartments.
 
-![Intravenous and Subcutaneous PK Models](docs/images/pk_model_diagrams.png)
-
 Both models support instantaneous bolus doses and constant-rate
 infusions. Subcutaneous dosing introduces an additional absorption
 compartment governed by the absorption rate constant k_a.
+
+![Intravenous and Subcutaneous PK Models](docs/images/pk_model_diagrams.png)
 
 ## Package structure
 ```text
