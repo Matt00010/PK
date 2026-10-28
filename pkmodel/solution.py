@@ -208,4 +208,11 @@ class Solution:
         ax.set_xlabel("Time (h)")
         ax.set_ylabel("Drug quantity (ng)")
         ax.legend()
+
+        ax.set_title(
+            f"{compartment.capitalize()} Compartment — Drug Quantity Over Time",
+            fontsize=14,
+            pad=15,
+        )
+
         return ax
