@@ -102,4 +102,3 @@ class TestSolution:
                 s1.plot(s1.protocol, compartment="missing", ax=ax)
         finally:
             plt.close(fig)
->>>>>>> fe85117bf6c871db11d350cf96bcf4060f97fad3
