@@ -13,4 +13,3 @@ class SolutionTest(unittest.TestCase):
         """
         model = pk.Solution()
         self.assertEqual(model.value, 44)
-
