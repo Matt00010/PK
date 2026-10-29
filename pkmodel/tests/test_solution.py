@@ -87,18 +87,18 @@ class TestSolution:
         import matplotlib.pyplot as plt
 
         with pytest.raises(RuntimeError, match="Call solve"):
-            s1.plot(s1.protocol)
+            s1.plot()
 
         s1.solve((0, 2), t_eval=[0, 1, 2])
         fig, ax = plt.subplots()
         try:
-            assert s1.plot(s1.protocol, ax=ax) is ax
+            assert s1.plot(ax=ax) is ax
             npt.assert_array_equal(ax.lines[0].get_xdata(), s1.t)
             npt.assert_allclose(ax.lines[0].get_ydata(), s1.y[0])
             assert ax.get_xlabel() == "Time (h)"
             assert ax.get_ylabel() == "Drug quantity (ng)"
             assert any(line.get_label() == "Bolus (10 ng)" for line in ax.lines)
             with pytest.raises(ValueError, match="Unknown compartment"):
-                s1.plot(s1.protocol, compartment="missing", ax=ax)
+                s1.plot(compartment="missing", ax=ax)
         finally:
             plt.close(fig)
