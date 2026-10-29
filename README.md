@@ -36,7 +36,7 @@ PK/
 | `Model` | Defines the model parameters and compartment structure. |
 | `Protocol` | Defines whether the drug administration is continuous or instantaneous bolus as well as the times and amounts of dose delivery. |
 | `Solution` | 	Solves the PK model with SciPy to find how the drug quantity changes over time across each compartment. Plots the solutions. |
-| `Diagram` | Visualises a PK model and its dosing protocol as a compartment diagram. |
+| `Diagram` | Visualises the PK model and its dosing protocol as a compartment diagram. |
 
 ## Installing PKM
 
