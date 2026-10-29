@@ -9,10 +9,9 @@ from textwrap import fill
 from typing import TYPE_CHECKING
 
 import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib.axes import Axes
 from matplotlib.patches import FancyArrowPatch, Rectangle
-
-import numpy as np
 
 if TYPE_CHECKING:
     from .model import Model

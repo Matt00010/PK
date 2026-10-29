@@ -1,6 +1,6 @@
 import matplotlib.pylab as plt
-import numpy as np
 import scipy.integrate
+
 
 class Model:
     def __init__(self, name, Q_p1, V_c, V_p1, CL, X):
@@ -20,8 +20,6 @@ class Model:
         dqc_dt = self.dose(t) - q_c / self.V_c * self.CL - transition
         dqp1_dt = transition
         return [dqc_dt, dqp1_dt]
-
-    def three_compartment(self, )
     
     def plot_solution(self, t_eval, y0):
         sol = scipy.integrate.solve_ivp(
