@@ -8,7 +8,6 @@ import matplotlib.pyplot as plt
 from pkmodel import Model, Protocol
 from pkmodel.diagram import plot_model_diagram
 
-
 # Both models use the same distribution and clearance parameters.
 iv_model = Model(
     V_c=10_000,

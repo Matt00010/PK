@@ -34,7 +34,6 @@ fig, ax = plt.subplots()
 for name in solution.model.compartment_names:
     solution.plot(name, ax=ax)
 
-# 
 handles, labels = ax.get_legend_handles_labels()
 unique_entries = dict(zip(labels, handles))
 ax.legend(unique_entries.values(), unique_entries.keys())
