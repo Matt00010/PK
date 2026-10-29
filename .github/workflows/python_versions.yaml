@@ -9,7 +9,7 @@ on:
 
 jobs:
   python-tests:
-    runs-on: ubuntu-latests
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
