@@ -1,4 +1,4 @@
-# PKModel_marks: Pharmokinetic Modelling Package 
+# PKModel_marks: Pharmokinetic Modelling Package
 PKModel_marks is a python package for solving and visualising pharmokinetic models.
 
 The library supports both intravenous (IV) and subcutaneous (SC)
@@ -96,7 +96,7 @@ solution.plot("peripheral_1")
 plt.show()
 ```
 
-## Interactive Demonstration 
+## Interactive Demonstration
 Install the optional Streamlit dependency and launch the comparison app from
 the repository root:
 ```powershell
