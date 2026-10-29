@@ -16,6 +16,7 @@ compartment governed by the absorption rate constant `k_a` (Figure 1).
 ```text
 PK/
 ├── pkmodel/
+|   ├── diagram.py
 │   ├── model.py
 │   ├── protocol.py
 │   ├── solution.py
@@ -32,9 +33,10 @@ PK/
 
 | Script | Description |
 |-------|-------------|
-| `Model` | Defines the model parameters and calculates how the drug quantity changes over time across each compartment. |
-| `Protocol` | Defines whether the drug administration is continuous or instantaneous bolus. |
-| `Solution` | 	Solves the PK model with SciPy and visualises the changes in drug quantity over time. |
+| `Model` | Defines the model parameters and compartment structure. |
+| `Protocol` | Defines whether the drug administration is continuous or instantaneous bolus as well as the times and amounts of dose delivery. |
+| `Solution` | 	Solves the PK model with SciPy to find how the drug quantity changes over time across each compartment. Plots the solutions. |
+| `Diagram` | Visualises a PK model and its dosing protocol as a compartment diagram. |
 
 ## Installing PKM
 
