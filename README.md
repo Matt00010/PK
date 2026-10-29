@@ -47,7 +47,7 @@ python -m pip install PKModel_marks
 ## Requirements
 ```python
 import numpy as np
-import PKModel_marks as pk
+import pkmodel as pk
 import matplotlib.pyplot as plt
 ```
 
